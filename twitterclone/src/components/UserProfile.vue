@@ -10,10 +10,32 @@
         <div class="user-profile__follower-count">
             <strong>Followers: </strong> {{followers}}
         </div>
+
+        <form class="user-profile__create-tweet">
+          <label for="newTweet"><strong>New Tweet</strong></label>
+          <textarea id="newTweet"  rows="4"></textarea>
+        </form>
+
+        <div class="user-profile__create-tweet-type">
+          <label for="newTweetType"><strong>Type: </strong></label>
+          <select id="newTweetType">
+            <option 
+            v-for="(option, index) in tweetTypes" 
+            :value="option.value" 
+            :key="index">
+            {{option.name}}
+            </option>
+          </select>
+        </div>
       </div>
 
       <div class="user-profile__tweets-wrapper">
-          <TweetItem v-for="tweet in user.tweets" :key="tweet.id" :username='user.userName' :tweet='tweet'/>
+          <TweetItem 
+          v-for="tweet in user.tweets" 
+          :key="tweet.id" 
+          :username='user.userName' 
+          :tweet='tweet' 
+          @favourite="toggleFavourite"/>
       </div>
   </div>
 </template>
@@ -27,6 +49,10 @@ export default {
     name: 'User Profile',
     data() {
     return {
+      tweetTypes: [
+        {value: 'draft', name: 'Draft'},
+        {value: 'instant', name: 'Instant Tweet'}
+      ],
       followers: 0,
       user: {
         id: 1,
@@ -57,7 +83,10 @@ export default {
   methods: {
     followUser() {
       this.followers++;
-    }
+    },
+    toggleFavourite(id) {
+      console.log(`Favourited tweet #${id}`);
+    },
   },
   mounted() {
     this.followUser();
@@ -100,8 +129,13 @@ h1 {
     margin-bottom: 3px;
     font-weight: bold;
 }
-</style>
 
+.user-profile__create-tweet {
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+</style>
 
 
 
