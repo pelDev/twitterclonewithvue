@@ -11,22 +11,10 @@
             <strong>Followers: </strong> {{followers}}
         </div>
 
-        <form class="user-profile__create-tweet">
-          <label for="newTweet"><strong>New Tweet</strong></label>
-          <textarea id="newTweet"  rows="4"></textarea>
-        </form>
+        <CreateNewTweet
+        @add-tweet="addNewTweet"/>        
 
-        <div class="user-profile__create-tweet-type">
-          <label for="newTweetType"><strong>Type: </strong></label>
-          <select id="newTweetType">
-            <option 
-            v-for="(option, index) in tweetTypes" 
-            :value="option.value" 
-            :key="index">
-            {{option.name}}
-            </option>
-          </select>
-        </div>
+      
       </div>
 
       <div class="user-profile__tweets-wrapper">
@@ -42,17 +30,15 @@
 
 <script>
 import TweetItem from "./TweetItem";
+import CreateNewTweet from "./CreateNewTweet";
 export default {
     components: {
-        TweetItem
+        TweetItem,
+        CreateNewTweet
     },
     name: 'User Profile',
     data() {
     return {
-      tweetTypes: [
-        {value: 'draft', name: 'Draft'},
-        {value: 'instant', name: 'Instant Tweet'}
-      ],
       followers: 0,
       user: {
         id: 1,
@@ -78,7 +64,7 @@ export default {
   computed: {
     fullName() {
       return `${this.user.firstName} ${this.user.lastName}`;
-    }
+    },
   },
   methods: {
     followUser() {
@@ -87,6 +73,13 @@ export default {
     toggleFavourite(id) {
       console.log(`Favourited tweet #${id}`);
     },
+    addNewTweet(newTweetContent) {
+          this.user.tweets.unshift( {
+          id: this.user.tweets.length + 1,
+          content: newTweetContent,
+          });
+          console.log(newTweetContent);
+    }
   },
   mounted() {
     this.followUser();
@@ -95,13 +88,13 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .user-profile {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    padding: 50px 5%;
-}
-.user-profile__user-panel {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  padding: 50px 5%;
+
+  .user-profile__user-panel {
     display: flex;
     flex-direction: column;
     margin-right: 5px;
@@ -109,32 +102,40 @@ export default {
     background-color: white;
     border-radius: 5px;
     border: 1px solid grey;
-}
 
-h1 {
-    margin: 0;
+    h1 {
+      margin: 0;
+    }
+
+    .user-profile__admin-badge {
+      background: rebeccapurple;
+      border-radius: 5px;
+      margin-right: auto;
+      color: white;
+      padding: 0px 10px;
+      margin-top: 3px;
+      margin-bottom: 3px;
+      font-weight: bold;
+    }
+
+  }
+
+  .user-profile__tweets-wrapper{
+    display: grid;
+    grid-gap: 10px;
+  }
+
+
 }
 
 .user-profile__follower-count {
     margin-top: 3px;
 }
 
-.user-profile__admin-badge {
-    background: rebeccapurple;
-    border-radius: 5px;
-    margin-right: auto;
-    color: white;
-    padding: 0px 10px;
-    margin-top: 3px;
-    margin-bottom: 3px;
-    font-weight: bold;
-}
 
-.user-profile__create-tweet {
-  padding-top: 20px;
-  display: flex;
-  flex-direction: column;
-}
+
+
+
 </style>
 
 
